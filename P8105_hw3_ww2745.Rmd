@@ -193,7 +193,7 @@ citi_df |>
   geom_line(size = 1) +  
   facet_grid(year ~ month) +
   labs(
-    title = "Median Bike Rental Duration by Weekday across January and July of 2020 and 2024", 
+    title = "Median Ride Duration by Weekday across January and July of 2020 and 2024", 
     x = "Weekdays", 
     y = "Median Duration") +
   theme_minimal()
