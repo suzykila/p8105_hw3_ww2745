@@ -101,8 +101,80 @@ ggplot(merge_df, aes(x = age, fill = sex)) +
 The highest peak for women is around 30, and for men is 80.
 
 Now I'm going to make a graph showing the aggregated activity counts:
-```{r agg_acc}
 
 
-  
+
+##Problem 3
+Load and tidy the dataset.
+```{r load_citi}
+jan_20=
+  read_csv(file="./data/Jan 2020 Citi.csv"
+           ) |> 
+  janitor::clean_names() |> 
+  mutate(
+    month="January",
+    year="2020"
+  )
+
+jan_24=
+  read_csv(file="./data/Jan 2024 Citi.csv"
+           ) |> 
+  janitor::clean_names() |> 
+  mutate(
+    month="January",
+    year="2024"
+  )
+
+july_20=
+  read_csv(file="./data/July 2020 Citi.csv"
+           ) |> 
+  janitor::clean_names() |> 
+  mutate(
+    month="July",
+    year="2020"
+  )
+
+july_24=
+  read_csv(file="./data/July 2024 Citi.csv"
+           ) |> 
+  janitor::clean_names() |> 
+  mutate(
+    month="July",
+    year="2024"
+  )
+
+citi_df = 
+  bind_rows(jan_20, jan_24, july_20, july_24)
+```
+This dataset contains 1% of all rides with a total duration less than 4 hours in each of four months. There are 99485 observations and nine columns.
+
+Next is a table showing the total number of rides in each combination of year and month separating casual riders and Citi Bike members. 
+```{r table}
+citi_df |> 
+  group_by(month, year, member_casual) |> 
+  summarize(
+    num = n()
+  ) |> 
+  pivot_wider(
+    names_from = member_casual,
+    values_from = num
+  ) |> 
+  knitr::kable()
+```
+
+Next is a table showing 5 most popular starting stations in July 2024. 
+
+```{r pop_station}
+popular_stations_df = 
+ citi_df |> 
+  filter(month == "July", year == "2024", .keep_all = TRUE) |> 
+  group_by(start_station_name) |> 
+  summarize(numer_of_rides = n()) |> 
+  mutate(
+    start_station_rank = min_rank(desc(numer_of_rides))
+  ) |> 
+  arrange(start_station_rank) |> 
+  head(5)
+popular_stations_df
+
 ```
