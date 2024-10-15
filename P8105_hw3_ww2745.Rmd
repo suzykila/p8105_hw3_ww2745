@@ -198,4 +198,19 @@ citi_df |>
     y = "Median Duration") +
   theme_minimal()
 ```
+The median for July is higher than January. People tend to ride longer on weekends.
+
+For data in 2024, make a figure that shows the impact of month, membership status, and bike type on the distribution of ride duration. 
+```{r}
+citi_df |> 
+  ggplot(aes(x = rideable_type, y = duration)) +
+  geom_violin() +
+  facet_grid(month ~ member_casual) +
+  labs(
+    title = "Distribution of Ride Based on Bike Type, Membership Status and Month",
+    x = "Type of Bike",
+    y = "Duration of Ride (minutes)"
+  ) +
+  theme_minimal()
+```
 
