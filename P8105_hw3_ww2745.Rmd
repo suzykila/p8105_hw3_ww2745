@@ -161,6 +161,7 @@ citi_df |>
   ) |> 
   knitr::kable()
 ```
+The number of casual ride and member are both increasing as time goes by.
 
 Next is a table showing 5 most popular starting stations in July 2024. 
 
@@ -175,6 +176,26 @@ popular_stations_df =
   ) |> 
   arrange(start_station_rank) |> 
   head(5)
-popular_stations_df
-
 ```
+
+Here is a plot to investigate the effects of day of the week, month, and year on median ride duration. 
+```{r ride_duration}
+citi_df |> 
+  group_by(weekdays, month, year) |> 
+  summarize(
+    median_duration = median(duration, na.rm = TRUE),
+    .group = "drop"
+  ) |> 
+  mutate(
+    weekdays = factor(weekdays, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+  ) |> 
+  ggplot(aes(x = weekdays, y = median_duration, group = year, fill = weekdays, color = month)) +
+  geom_line(size = 1) +  
+  facet_grid(year ~ month) +
+  labs(
+    title = "Median Bike Rental Duration by Weekday across January and July of 2020 and 2024", 
+    x = "Weekdays", 
+    y = "Median Duration") +
+  theme_minimal()
+```
+
