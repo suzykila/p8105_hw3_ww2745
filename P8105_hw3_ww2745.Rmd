@@ -7,7 +7,8 @@ output: github_document
 
 ```{r setup}
 library(tidyverse)
-
+library(ggridges)
+library(patchwork)
 knitr::opts_chunk$set(
   fig.width = 6,
   fig.asp = .6,
@@ -24,6 +25,8 @@ options(
 scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
+##Problem 1
+
 
 ##Problem 2
 
@@ -41,7 +44,8 @@ demo_df=
         sex, 
         1 ~ "male", 
         2 ~ "female"),
-    sex = as.factor(sex))
+    sex = as.factor(sex)) |> 
+  drop_na(sex)
     
 demo_df
 
@@ -67,22 +71,38 @@ Exploratory analyses based on education level.
 
 This is a table for the number of men and women in each education category.
 ```{r num_edu}
-merge_df |>
-  mutate(
+merge_df =
+  mutate(merge_df,
     education = 
       case_match(
         education, 
         1 ~ "less_than_high_school", 
         2 ~ "high_school_equivalent",
         3 ~ "more_than_high_school"),
-    education = as.factor(education)) |> 
+    education = as.factor(education),
+    seqn = as.factor(seqn)) 
+
+merge_df |> 
   group_by(sex, education) |>
-  summarize(n_obs = n())
+  summarize(n_obs = n()) |> 
+  pivot_wider(
+    names_from = education,
+    values_from = n_obs) |> 
+  knitr::kable(digits = 1)
 ```
 Most of the participants have education level at least equivalent to high school.
 
 This graph shows the age distributions for men and women in each education category.
-```{r }
-
+```{r age_distribution}
+ggplot(merge_df, aes(x = age, fill = sex)) + 
+  geom_density(alpha = .5) + 
+  viridis::scale_fill_viridis(discrete = TRUE)
 ```
+The highest peak for women is around 30, and for men is 80.
 
+Now I'm going to make a graph showing the aggregated activity counts:
+```{r agg_acc}
+
+
+  
+```
