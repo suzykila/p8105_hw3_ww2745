@@ -27,7 +27,7 @@ scale_fill_discrete = scale_fill_viridis_d
 
 ##Problem 2
 
-#Load and organize the dataset.
+Load and organize the dataset.
 ```{r load_tidy}
 demo_df=
   read_csv(file="./data/nhanes_covar.csv",
@@ -41,8 +41,8 @@ demo_df=
         sex, 
         1 ~ "male", 
         2 ~ "female"),
-    sex = as.factor(sex),
-    education = as.factor(education))
+    sex = as.factor(sex))
+    
 demo_df
 
 acc_df=
@@ -63,4 +63,26 @@ merge_df =
 merge_df
 ```
 
+Exploratory analyses based on education level.
+
+This is a table for the number of men and women in each education category.
+```{r num_edu}
+merge_df |>
+  mutate(
+    education = 
+      case_match(
+        education, 
+        1 ~ "less_than_high_school", 
+        2 ~ "high_school_equivalent",
+        3 ~ "more_than_high_school"),
+    education = as.factor(education)) |> 
+  group_by(sex, education) |>
+  summarize(n_obs = n())
+```
+Most of the participants have education level at least equivalent to high school.
+
+This graph shows the age distributions for men and women in each education category.
+```{r }
+
+```
 
