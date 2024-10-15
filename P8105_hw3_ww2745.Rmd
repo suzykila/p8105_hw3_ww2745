@@ -25,3 +25,42 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
 
+##Problem 2
+
+#Load and organize the dataset.
+```{r load_tidy}
+demo_df=
+  read_csv(file="./data/nhanes_covar.csv",
+           skip = 4) |> 
+  janitor::clean_names() |> 
+  filter(age>21) |> 
+  drop_na() |> 
+  mutate(
+    sex = 
+      case_match(
+        sex, 
+        1 ~ "male", 
+        2 ~ "female"),
+    sex = as.factor(sex),
+    education = as.factor(education))
+demo_df
+
+acc_df=
+  read_csv(file="./data/nhanes_accel.csv") |> 
+  janitor::clean_names() |> 
+  pivot_longer(
+    min1:min1440,
+    names_to = "minute",
+    names_prefix = "min",
+    values_to = "mims"
+  ) |> 
+  mutate(
+    minute = as.factor(minute))
+acc_df
+
+merge_df = 
+  left_join(acc_df, demo_df, by = "seqn")
+merge_df
+```
+
+
