@@ -207,10 +207,10 @@ citi_df |>
   geom_violin() +
   facet_grid(month ~ member_casual) +
   labs(
-    title = "Distribution of Ride Based on Bike Type, Membership Status and Month",
+    title = "Distribution of Ride Based On Month, Membership Status, and Bike Type",
     x = "Type of Bike",
     y = "Duration of Ride (minutes)"
   ) +
   theme_minimal()
 ```
-
+Ride in July and for casual membership tend to have shorter period.
